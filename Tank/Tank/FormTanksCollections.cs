@@ -1,4 +1,6 @@
-﻿using Tank.DrawningObjects;
+﻿using Microsoft.Extensions.Logging;
+using Tank.Exceptions;
+using Tank.DrawningObjects;
 using Tank.Generics;
 using Tank.MovementStrategy;
 using System;
@@ -17,11 +19,15 @@ namespace Tank
     {
         private readonly TanksGenericStorage _storage;
 
+        // Логгер 
+        private readonly ILogger _logger;
+
         // Конструктор
-        public FormTanksCollections()
+        public FormTanksCollections(ILogger<FormTanksCollections> logger)
         {
             InitializeComponent();
             _storage = new TanksGenericStorage(DrawTank.Width, DrawTank.Height);
+            _logger = logger;
         }
 
         private void ReloadObjects()
@@ -48,12 +54,14 @@ namespace Tank
         {
             if (string.IsNullOrEmpty(SetTextBox.Text))
             {
-                MessageBox.Show("Не все данные заполнены", "Ошибка",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не все данные заполнены", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _logger.LogWarning("Коллекция не добавлена, не все данные заполнены");
                 return;
             }
             _storage.AddSet(SetTextBox.Text);
             ReloadObjects();
+
+            _logger.LogInformation($"Добавлен набор: {SetTextBox.Text}");
         }
 
         private void ListBoxObjects_SelectedIndexChanged(object sender, EventArgs e)
@@ -66,14 +74,18 @@ namespace Tank
         {
             if (CollectionListBox.SelectedIndex == -1)
             {
+                _logger.LogWarning("Удаление невыбранного набора");
                 return;
             }
-            if (MessageBox.Show($"Удалить объект {CollectionListBox.SelectedItem}?", "Удаление", MessageBoxButtons.YesNo,
+            string nameSet = CollectionListBox.SelectedItem.ToString() ?? string.Empty;
+            if (MessageBox.Show($"Удалить объект {nameSet}?", "Удаление", MessageBoxButtons.YesNo,
                MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                _storage.DelSet(CollectionListBox.SelectedItem.ToString() ?? string.Empty);
+                _storage.DelSet(nameSet);
                 ReloadObjects();
+                _logger.LogInformation($"Набор '{nameSet}' удален");
             }
+            _logger.LogWarning("Отмена удаления набора");
         }
 
         private void AddTank(DrawArmoVehicle tank)
@@ -85,16 +97,24 @@ namespace Tank
             var obj = _storage[CollectionListBox.SelectedItem.ToString() ?? string.Empty];
             if (obj == null)
             {
+                _logger.LogWarning("Добавление пустого объекта");
                 return;
             }
-            if ((obj + tank) != false)
+
+            try
             {
-                MessageBox.Show("Объект добавлен");
-                DrawTank.Image = obj.ShowTanks();
+                if ((obj + tank) != false)
+                {
+                    MessageBox.Show("Объект добавлен");
+                    DrawTank.Image = obj.ShowTanks();
+                    _logger.LogInformation($"Добавлен объект {obj}");
+                }
             }
-            else
+            catch (TankStorageOverflowException ex)
             {
+                MessageBox.Show(ex.Message);
                 MessageBox.Show("Не удалось добавить объект");
+                _logger.LogWarning($"{ex.Message} в наборе {CollectionListBox.SelectedItem.ToString()}");
             }
         }
 
@@ -119,29 +139,39 @@ namespace Tank
         {
             if (CollectionListBox.SelectedIndex == -1)
             {
+                _logger.LogWarning("Удаление объекта из несуществующего набора");
                 return;
             }
-            var obj = _storage[CollectionListBox.SelectedItem.ToString() ??
-            string.Empty];
+            var obj = _storage[CollectionListBox.SelectedItem.ToString() ?? string.Empty];
             if (obj == null)
             {
                 return;
             }
 
-            if (MessageBox.Show("Удалить объект?", "Удаление",
-            MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (MessageBox.Show("Удалить объект?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
+                _logger.LogWarning("Отмена удаления объекта");
                 return;
             }
             int pos = Convert.ToInt32(InputNum.Text);
-            if (obj - pos != null)
+            try
             {
-                MessageBox.Show("Объект удален");
-                DrawTank.Image = obj.ShowTanks();
+                if (obj - pos != null)
+                {
+                    MessageBox.Show("Объект удален");
+                    _logger.LogInformation($"Удален объект с позиции{pos}");
+                    DrawTank.Image = obj.ShowTanks();
+                }
+                else
+                {
+                    MessageBox.Show("Не удалось удалить объект");
+                    _logger.LogWarning($"Не удалось удалить объект из набора {CollectionListBox.SelectedItem.ToString()}");
+                }
             }
-            else
+            catch (TankNotFoundException ex)
             {
-                MessageBox.Show("Не удалось удалить объект");
+                MessageBox.Show(ex.Message);
+                _logger.LogWarning($"{ex.Message} из набора {CollectionListBox.SelectedItem.ToString()}");
             }
         }
 
@@ -164,13 +194,16 @@ namespace Tank
         {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (_storage.SaveData(saveFileDialog.FileName))
+                try
                 {
+                    _storage.SaveData(saveFileDialog.FileName);
                     MessageBox.Show("Сохранение прошло успешно", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _logger.LogInformation($"Данные загружены в файл {saveFileDialog.FileName}");
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Не сохранилось", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Не сохранилось: {ex.Message}", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _logger.LogWarning($"Не удалось сохранить информацию в файл: {ex.Message}");
                 }
             }
         }
@@ -179,14 +212,17 @@ namespace Tank
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (_storage.LoadData(openFileDialog.FileName))
+                try
                 {
+                    _storage.LoadData(openFileDialog.FileName);
                     ReloadObjects();
                     MessageBox.Show("Загрузка прошла успешно", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _logger.LogInformation($"Данные загружены из файла {openFileDialog.FileName}");
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Не загрузилось", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Не загрузилось: {ex.Message}", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _logger.LogWarning($"Не удалось загрузить информацию из файла: {ex.Message}");
                 }
             }
         }
