@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,84 +9,77 @@ namespace Tank
 {
     internal class SetGeneric<T> where T : class
     {
-        // Массив объектов, которые храним
-        private readonly T?[] _places;
+        // Список объектов, которые храним и их количество
+        private readonly List<T?> _places;
+        public int Count => _places.Count;
 
-        // Количество объектов в массиве
-        public int Count => _places.Length;
+        // Максимальное количество объектов
+        private readonly int _maxCount;
 
-        // Конструктор
+        // Конструктор 
         public SetGeneric(int count)
         {
-            _places = new T?[count];
+            _maxCount = count;
+            _places = new List<T?>(_maxCount);
         }
 
-        //Добавление объекта в набор
-        public int Insert(T tank)
+        // Добавление объекта в набор
+        public bool Insert(T tank)
         {
-            int index = -1;
-            for(int i = 0; i < _places.Length; i++)
-            {
-                if (_places[i] == null)
-                {
-                    index = i; break;
-                }
-            }
-            if (index < 0)
-            {
-                return -1;
-            }
-            for(int i = index; i > 0; i--)
-            {
-                _places[i] = _places[i - 1];
-            }
-            _places[0] = tank;
-            return 0;
+            return Insert(tank, 0);
         }
 
-        // Добавление объекта в набор на конкретную позицию
+        // Добавление на конкретную позицию
         public bool Insert(T tank, int position)
         {
-            if (position < 0 || position >= Count)
+            if (position < 0 || position >= _maxCount)
                 return false;
-            if (_places[position] == null)
-            {
-                _places[position] = tank;
-                return true;
-            }
-            int index = -1;
-            for(int i = position; i < Count; i++)
-            {
-                if (_places[i] == null)
-                {
-                    index = i; break;
-                }
-            }
-            if (index < 0)
+
+            if (Count >= _maxCount)
                 return false;
-            for(int i = index; index > position; i--)
-            {
-                _places[i] = _places[i - 1]; 
-            }
-            _places[position] = tank;
+            _places.Insert(0, tank);
             return true;
         }
 
         // Удаление объекта из набора с конкретной позиции
         public bool Remove(int position)
         {
-            if (position < 0 || position >= Count)
+            if (position < 0 || position > _maxCount)
                 return false;
-            _places[position] = null;
+            if (position >= Count)
+                return false;
+            _places.RemoveAt(position);
             return true;
         }
 
         // Получение объекта из набора по позиции
-        public T? Get(int position)
+        public T? this[int position]
         {
-            if (position < 0 || position >= Count)
-                return null;
-            return _places[position];
+            get
+            {
+                if (position < 0 || position > _maxCount)
+                    return null;
+                return _places[position];
+            }
+            set
+            {
+                if (position < 0 || position > _maxCount)
+                    return;
+                _places[position] = value;
+            }
+        }
+
+        // Проход по списку
+        public IEnumerable<T?> GetTanks(int? maxTanks = null)
+        {
+            for (int i = 0; i < _places.Count; ++i)
+            {
+                yield return _places[i];
+                if (maxTanks.HasValue && i == maxTanks.Value)
+                {
+                    yield break;
+                }
+            }
         }
     }
 }

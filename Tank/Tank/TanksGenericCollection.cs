@@ -35,30 +35,30 @@ namespace Tank.Generics
         }
 
         // Перегрузка оператора сложения
-        public static int? operator +(TanksGenericCollection<T, U> collect, T? obj)
+        public static bool operator +(TanksGenericCollection<T, U> collect, T? obj)
         {
-            if (obj == null)
-            {
-                return -1;
-            }
-            return collect?._collection.Insert(obj);
-        }
-
-        // Перегрузка оператора вычитания
-        public static bool operator -(TanksGenericCollection<T, U> collect, int pos)
-        {
-            T? obj = collect._collection.Get(pos);
             if (obj == null)
             {
                 return false;
             }
-            return collect._collection.Remove(pos);
+            return (bool)collect?._collection.Insert(obj);
+        }
+
+        // Перегрузка оператора вычитания
+        public static T? operator -(TanksGenericCollection<T, U> collect, int pos)
+        {
+            T? obj = collect._collection[pos];
+            if (obj != null)
+            {
+                collect._collection.Remove(pos);
+            }
+            return obj;
         }
 
         // Получение объекта IMoveableObject
         public U? GetU(int pos)
         {
-            return (U?)_collection.Get(pos)?.GetMoveableObject;
+            return (U?)_collection[pos]?.GetMoveableObject;
         }
 
         // Вывод всего набора объектов
@@ -94,15 +94,16 @@ namespace Tank.Generics
         {
             int width = _pictureWidth / _placeSizeWidth;
             int height = _pictureHeight / _placeSizeHeight;
-            for (int i = 0; i < _collection.Count; i++)
+            int i = 0;
+            foreach(var tank in _collection.GetTanks())
             {
-                DrawArmoVehicle? tank = _collection.Get(i);
-                if (tank == null)
-                    continue;
-                tank.SetPosition((i % (_pictureWidth / _placeSizeWidth)) * _placeSizeWidth, (i / (_pictureWidth / _placeSizeWidth)) * _placeSizeHeight);
-                tank.DrawTransport(g);
+                if (tank != null)
+                {
+                    tank.SetPosition((i % (_pictureWidth / _placeSizeWidth)) * _placeSizeWidth, (i / (_pictureWidth / _placeSizeWidth)) * _placeSizeHeight);
+                    tank.DrawTransport(g);
+                }
+                i++;
             }
         }
     }
 }
-
