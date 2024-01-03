@@ -43,7 +43,7 @@ namespace Tank.Generics
             {
                 return false;
             }
-            return (bool)collect?._collection.Insert(obj);
+            return (bool)collect?._collection.Insert(obj, new DrawiningTankEqutables());
         }
 
         // Перегрузка оператора вычитания
@@ -53,6 +53,9 @@ namespace Tank.Generics
             collect._collection.Remove(pos);
             return obj;
         }
+
+        // Сортировка
+        public void Sort(IComparer<T> comparer) => _collection.SortSet(comparer);
 
         // Получение объекта IMoveableObject
         public U? GetU(int pos)

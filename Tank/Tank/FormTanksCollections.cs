@@ -36,7 +36,7 @@ namespace Tank
             CollectionListBox.Items.Clear();
             foreach (var key in _storage.Keys)
             {
-                CollectionListBox.Items.Add(key);
+                CollectionListBox.Items.Add(key.Name);
             }
             if (CollectionListBox.Items.Count > 0 && (index == -1 || index
             >= CollectionListBox.Items.Count))
@@ -66,8 +66,7 @@ namespace Tank
 
         private void ListBoxObjects_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DrawTank.Image =
-            _storage[CollectionListBox.SelectedItem?.ToString() ?? string.Empty]?.ShowTanks();
+            DrawTank.Image = _storage[CollectionListBox.SelectedItem?.ToString() ?? string.Empty]?.ShowTanks();
         }
 
         private void ButtonDelObject_Click(object sender, EventArgs e)
@@ -115,6 +114,11 @@ namespace Tank
                 MessageBox.Show(ex.Message);
                 MessageBox.Show("Не удалось добавить объект");
                 _logger.LogWarning($"{ex.Message} в наборе {CollectionListBox.SelectedItem.ToString()}");
+            }
+            catch (ApplicationException ex)
+            {
+                MessageBox.Show(ex.Message);
+                _logger.LogWarning($"добавление танка неуспешно {ex.Message}");
             }
         }
 
@@ -225,6 +229,21 @@ namespace Tank
                     _logger.LogWarning($"Не удалось загрузить информацию из файла: {ex.Message}");
                 }
             }
+        }
+
+        private void ButtonSortByType_Click(object sender, EventArgs e) => CompareTank(new TankCompareByType());
+
+        private void ButtonSortByColor_Click(object sender, EventArgs e) => CompareTank(new TankCompareByColor());
+
+        private void CompareTank(IComparer<DrawArmoVehicle?> comparer)
+        {
+            if (CollectionListBox.SelectedIndex == -1)
+                return;
+            var obj = _storage[CollectionListBox.SelectedItem.ToString() ?? string.Empty];
+            if (obj == null)
+                return;
+            obj.Sort(comparer);
+            DrawTank.Image = obj.ShowTanks();
         }
     }
 }

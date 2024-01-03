@@ -7,16 +7,17 @@ using Tank.Generics;
 using Tank.DrawningObjects;
 using Tank.MovementStrategy;
 using Tank.Exceptions;
+using Tank.Entities;
 
 namespace Tank
 {
     internal class TanksGenericStorage
     {
         // Словарь
-        readonly Dictionary<string, TanksGenericCollection<DrawArmoVehicle, DrawingObjectTank>> _tankStorages;
+        readonly Dictionary<TankCollectionInfo, TanksGenericCollection<DrawArmoVehicle, DrawingObjectTank>> _tankStorages;
 
         // Возвращение списка названий наборов
-        public List<string> Keys => _tankStorages.Keys.ToList();
+        public List<TankCollectionInfo> Keys => _tankStorages.Keys.ToList();
         private readonly int _pictureWidth;
         private readonly int _pictureHeight;
 
@@ -27,7 +28,7 @@ namespace Tank
         // Конструктор
         public TanksGenericStorage(int pictureWidth, int pictureHeight)
         {
-            _tankStorages = new Dictionary<string, TanksGenericCollection<DrawArmoVehicle, DrawingObjectTank>>();
+            _tankStorages = new Dictionary<TankCollectionInfo, TanksGenericCollection<DrawArmoVehicle, DrawingObjectTank>>();
             _pictureWidth = pictureWidth;
             _pictureHeight = pictureHeight;
         }
@@ -35,15 +36,17 @@ namespace Tank
         // Добавление набора
         public void AddSet(string name)
         {
-            if (_tankStorages.ContainsKey(name)) return;
-            _tankStorages[name] = new TanksGenericCollection<DrawArmoVehicle, DrawingObjectTank>(_pictureWidth, _pictureHeight);
+            TankCollectionInfo Info = new TankCollectionInfo(name, string.Empty);
+            if (_tankStorages.ContainsKey(Info)) return;
+            _tankStorages[Info] = new TanksGenericCollection<DrawArmoVehicle, DrawingObjectTank>(_pictureWidth, _pictureHeight);
         }
 
         // Удаление набора
         public void DelSet(string name)
         {
-            if (!_tankStorages.ContainsKey(name)) return;
-            _tankStorages.Remove(name);
+            TankCollectionInfo Info = new TankCollectionInfo(name, string.Empty);
+            if (!_tankStorages.ContainsKey(Info)) return;
+            _tankStorages.Remove(Info);
         }
 
         // Доступ к набору
@@ -52,7 +55,8 @@ namespace Tank
         {
             get
             {
-                if (_tankStorages.ContainsKey(ind)) return _tankStorages[ind];
+                TankCollectionInfo Info = new TankCollectionInfo(ind, string.Empty);
+                if (_tankStorages.ContainsKey(Info)) return _tankStorages[Info];
                 return null;
             }
         }
@@ -65,14 +69,14 @@ namespace Tank
             }
 
             StringBuilder data = new();
-            foreach (KeyValuePair<string, TanksGenericCollection<DrawArmoVehicle, DrawingObjectTank>> record in _tankStorages)
+            foreach (KeyValuePair<TankCollectionInfo, TanksGenericCollection<DrawArmoVehicle, DrawingObjectTank>> record in _tankStorages)
             {
                 StringBuilder records = new();
                 foreach (DrawArmoVehicle? elem in record.Value.GetTanks)
                 {
                     records.Append($"{elem?.GetDataForSave(_separatorForObject)}{_separatorRecords}");
                 }
-                data.AppendLine($"{record.Key}{_separatorForKeyValue}{records}");
+                data.AppendLine($"{record.Key.Name}{_separatorForKeyValue}{records}");
 
             }
             if (data.Length == 0)
@@ -135,7 +139,7 @@ namespace Tank
                             }
                         }
                     }
-                    _tankStorages.Add(name, collection);
+                    _tankStorages.Add(new TankCollectionInfo(name, string.Empty), collection);
                 }
             }
         }
