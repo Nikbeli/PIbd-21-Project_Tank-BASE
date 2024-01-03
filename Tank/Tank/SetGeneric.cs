@@ -17,6 +17,9 @@ namespace Tank
         // Максимальное количество объектов
         private readonly int _maxCount;
 
+        // Сортировка набора объектов
+        public void SortSet(IComparer<T?> comparer) => _places.Sort(comparer);
+
         // Конструктор 
         public SetGeneric(int count)
         {
@@ -25,19 +28,23 @@ namespace Tank
         }
 
         // Добавление объекта в набор
-        public bool Insert(T tank)
+        public bool Insert(T tank, IEqualityComparer<T?>? equal = null)
         {
-            return Insert(tank, 0);
+            return Insert(tank, 0, equal);
         }
 
         // Добавление на конкретную позицию
-        public bool Insert(T tank, int position)
+        public bool Insert(T tank, int position, IEqualityComparer<T?>? equal = null)
         {
             if (position < 0 || position >= _maxCount)
                 throw new TankNotFoundException(position);  // По позиции
 
             if (Count >= _maxCount)
                 throw new TankStorageOverflowException(_maxCount); // Макс количество в коллекции
+
+            if (equal != null && _places.Contains<T>(tank, equal))
+                throw new ApplicationException("уже существует");
+
             _places.Insert(0, tank);
             return true;
         }

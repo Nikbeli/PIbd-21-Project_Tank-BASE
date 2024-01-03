@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            SortColorButton = new Button();
+            SortTypeButton = new Button();
             menuStrip1 = new MenuStrip();
             StripMenu = new ToolStripMenuItem();
             SaveItem = new ToolStripMenuItem();
@@ -55,6 +57,8 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(SortColorButton);
+            panel1.Controls.Add(SortTypeButton);
             panel1.Controls.Add(menuStrip1);
             panel1.Controls.Add(panel2);
             panel1.Controls.Add(UpdateButton);
@@ -63,10 +67,31 @@
             panel1.Controls.Add(InputNum);
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Right;
-            panel1.Location = new Point(649, 0);
+            panel1.Location = new Point(560, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(237, 471);
+            panel1.Size = new Size(207, 402);
             panel1.TabIndex = 0;
+            // 
+            // SortColorButton
+            // 
+            SortColorButton.Location = new Point(27, 56);
+            SortColorButton.Name = "SortColorButton";
+            SortColorButton.Size = new Size(163, 23);
+            SortColorButton.TabIndex = 10;
+            SortColorButton.Text = "Сортировка по цвету";
+            SortColorButton.UseVisualStyleBackColor = true;
+            SortColorButton.Click += ButtonSortByColor_Click;
+            // 
+            // SortTypeButton
+            // 
+            SortTypeButton.Location = new Point(27, 30);
+            SortTypeButton.Name = "SortTypeButton";
+            SortTypeButton.Size = new Size(163, 23);
+            SortTypeButton.TabIndex = 9;
+            SortTypeButton.Text = "Сортировка по типу";
+            SortTypeButton.UseVisualStyleBackColor = true;
+            SortTypeButton.Click += ButtonSortByType_Click;
             // 
             // menuStrip1
             // 
@@ -74,7 +99,8 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { StripMenu });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(237, 28);
+            menuStrip1.Padding = new Padding(5, 2, 0, 2);
+            menuStrip1.Size = new Size(207, 24);
             menuStrip1.TabIndex = 7;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -82,20 +108,20 @@
             // 
             StripMenu.DropDownItems.AddRange(new ToolStripItem[] { SaveItem, LoadItem });
             StripMenu.Name = "StripMenu";
-            StripMenu.Size = new Size(59, 24);
+            StripMenu.Size = new Size(48, 20);
             StripMenu.Text = "Файл";
             // 
             // SaveItem
             // 
             SaveItem.Name = "SaveItem";
-            SaveItem.Size = new Size(166, 26);
+            SaveItem.Size = new Size(133, 22);
             SaveItem.Text = "Сохранить";
             SaveItem.Click += SaveToolStripMenuItem_Click;
             // 
             // LoadItem
             // 
             LoadItem.Name = "LoadItem";
-            LoadItem.Size = new Size(166, 26);
+            LoadItem.Size = new Size(133, 22);
             LoadItem.Text = "Загрузить";
             LoadItem.Click += LoadToolStripMenuItem_Click;
             // 
@@ -106,16 +132,18 @@
             panel2.Controls.Add(AddCollectButton);
             panel2.Controls.Add(SetTextBox);
             panel2.Controls.Add(label2);
-            panel2.Location = new Point(16, 62);
+            panel2.Location = new Point(14, 105);
+            panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(214, 220);
+            panel2.Size = new Size(187, 165);
             panel2.TabIndex = 6;
             // 
             // DeleteCollectButton
             // 
-            DeleteCollectButton.Location = new Point(3, 181);
+            DeleteCollectButton.Location = new Point(3, 136);
+            DeleteCollectButton.Margin = new Padding(3, 2, 3, 2);
             DeleteCollectButton.Name = "DeleteCollectButton";
-            DeleteCollectButton.Size = new Size(208, 29);
+            DeleteCollectButton.Size = new Size(182, 22);
             DeleteCollectButton.TabIndex = 4;
             DeleteCollectButton.Text = "Удалить набор";
             DeleteCollectButton.UseVisualStyleBackColor = true;
@@ -124,18 +152,20 @@
             // CollectionListBox
             // 
             CollectionListBox.FormattingEnabled = true;
-            CollectionListBox.ItemHeight = 20;
-            CollectionListBox.Location = new Point(3, 91);
+            CollectionListBox.ItemHeight = 15;
+            CollectionListBox.Location = new Point(3, 68);
+            CollectionListBox.Margin = new Padding(3, 2, 3, 2);
             CollectionListBox.Name = "CollectionListBox";
-            CollectionListBox.Size = new Size(207, 84);
+            CollectionListBox.Size = new Size(182, 64);
             CollectionListBox.TabIndex = 3;
             CollectionListBox.SelectedIndexChanged += ListBoxObjects_SelectedIndexChanged;
             // 
             // AddCollectButton
             // 
-            AddCollectButton.Location = new Point(3, 56);
+            AddCollectButton.Location = new Point(3, 42);
+            AddCollectButton.Margin = new Padding(3, 2, 3, 2);
             AddCollectButton.Name = "AddCollectButton";
-            AddCollectButton.Size = new Size(208, 29);
+            AddCollectButton.Size = new Size(182, 22);
             AddCollectButton.TabIndex = 2;
             AddCollectButton.Text = "Добавить набор";
             AddCollectButton.UseVisualStyleBackColor = true;
@@ -143,9 +173,10 @@
             // 
             // SetTextBox
             // 
-            SetTextBox.Location = new Point(2, 23);
+            SetTextBox.Location = new Point(2, 17);
+            SetTextBox.Margin = new Padding(3, 2, 3, 2);
             SetTextBox.Name = "SetTextBox";
-            SetTextBox.Size = new Size(209, 27);
+            SetTextBox.Size = new Size(183, 23);
             SetTextBox.TabIndex = 1;
             // 
             // label2
@@ -153,15 +184,16 @@
             label2.AutoSize = true;
             label2.Location = new Point(3, 0);
             label2.Name = "label2";
-            label2.Size = new Size(66, 20);
+            label2.Size = new Size(52, 15);
             label2.TabIndex = 0;
             label2.Text = "Наборы";
             // 
             // UpdateButton
             // 
-            UpdateButton.Location = new Point(10, 414);
+            UpdateButton.Location = new Point(9, 369);
+            UpdateButton.Margin = new Padding(3, 2, 3, 2);
             UpdateButton.Name = "UpdateButton";
-            UpdateButton.Size = new Size(219, 37);
+            UpdateButton.Size = new Size(192, 28);
             UpdateButton.TabIndex = 4;
             UpdateButton.Text = "Обновить коллекцию";
             UpdateButton.UseVisualStyleBackColor = true;
@@ -169,9 +201,10 @@
             // 
             // DeleteButton
             // 
-            DeleteButton.Location = new Point(10, 374);
+            DeleteButton.Location = new Point(9, 339);
+            DeleteButton.Margin = new Padding(3, 2, 3, 2);
             DeleteButton.Name = "DeleteButton";
-            DeleteButton.Size = new Size(219, 37);
+            DeleteButton.Size = new Size(192, 28);
             DeleteButton.TabIndex = 3;
             DeleteButton.Text = "Удалить технику";
             DeleteButton.UseVisualStyleBackColor = true;
@@ -179,9 +212,10 @@
             // 
             // AddButton
             // 
-            AddButton.Location = new Point(10, 296);
+            AddButton.Location = new Point(9, 281);
+            AddButton.Margin = new Padding(3, 2, 3, 2);
             AddButton.Name = "AddButton";
-            AddButton.Size = new Size(219, 37);
+            AddButton.Size = new Size(192, 28);
             AddButton.TabIndex = 2;
             AddButton.Text = "Добавить технику";
             AddButton.UseVisualStyleBackColor = true;
@@ -189,17 +223,18 @@
             // 
             // InputNum
             // 
-            InputNum.Location = new Point(10, 337);
+            InputNum.Location = new Point(9, 312);
+            InputNum.Margin = new Padding(3, 2, 3, 2);
             InputNum.Name = "InputNum";
-            InputNum.Size = new Size(219, 27);
+            InputNum.Size = new Size(192, 23);
             InputNum.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(122, 39);
+            label1.Location = new Point(107, 88);
             label1.Name = "label1";
-            label1.Size = new Size(103, 20);
+            label1.Size = new Size(83, 15);
             label1.TabIndex = 0;
             label1.Text = "Инструменты";
             // 
@@ -207,8 +242,9 @@
             // 
             DrawTank.Dock = DockStyle.Fill;
             DrawTank.Location = new Point(0, 0);
+            DrawTank.Margin = new Padding(3, 2, 3, 2);
             DrawTank.Name = "DrawTank";
-            DrawTank.Size = new Size(649, 471);
+            DrawTank.Size = new Size(560, 402);
             DrawTank.TabIndex = 1;
             DrawTank.TabStop = false;
             // 
@@ -218,11 +254,12 @@
             // 
             // FormTanksCollections
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(886, 471);
+            ClientSize = new Size(767, 402);
             Controls.Add(DrawTank);
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "FormTanksCollections";
             Text = "CollectionsFrame";
             panel1.ResumeLayout(false);
@@ -256,5 +293,7 @@
         private ToolStripMenuItem LoadItem;
         private OpenFileDialog openFileDialog;
         private SaveFileDialog saveFileDialog;
+        private Button SortColorButton;
+        private Button SortTypeButton;
     }
 }
