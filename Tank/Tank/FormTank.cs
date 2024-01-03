@@ -7,10 +7,13 @@ namespace Tank
     {
         private DrawArmoVehicle? _Tank;
         private AbstractStrategy? _abstractStrategy;
+        public DrawArmoVehicle? SelectedTank { get; private set; }
 
         public FormTank()
         {
             InitializeComponent();
+            _abstractStrategy = null;
+            SelectedTank = null;
         }
 
         private void Draw()
@@ -18,19 +21,30 @@ namespace Tank
             if (_Tank == null)
                 return;
 
-            Bitmap bmp = new(pictureBoxTank.Width, pictureBoxTank.Height);
-            Graphics gr = Graphics.FromImage(bmp);
+            Bitmap bitmap = new(pictureBoxTank.Width, pictureBoxTank.Height);
+            Graphics gr = Graphics.FromImage(bitmap);
             _Tank?.DrawTransport(gr);
-            pictureBoxTank.Image = bmp;
+            pictureBoxTank.Image = bitmap;
         }
 
 
         private void ButtonCreateTank_Click(object sender, EventArgs e)
         {
             Random rnd = new();
+            Color mainColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256));
+            ColorDialog dialog = new();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                mainColor = dialog.Color;
+            }
+            Color addColor = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256));
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                addColor = dialog.Color;
+            }
+
             _Tank = new DrawTank(rnd.Next(100, 200), rnd.Next(2000, 4000),
-                Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)),
-                Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)),
+               mainColor, addColor,
                 Convert.ToBoolean(rnd.Next(1, 2)), Convert.ToBoolean(rnd.Next(1, 2)), Convert.ToBoolean(rnd.Next(1, 2)),
                 pictureBoxTank.Width, pictureBoxTank.Height);
             _Tank.SetPosition(rnd.Next(10, 100), rnd.Next(10, 100));
@@ -66,9 +80,15 @@ namespace Tank
         private void CreateButtonArmoVehicle_Click(object sender, EventArgs e)
         {
             Random rnd = new();
+            Color color = Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256));
+            ColorDialog dialog = new();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                color = dialog.Color;
+            }
+
             _Tank = new DrawArmoVehicle(rnd.Next(100, 200), rnd.Next(2000, 4000),
-                Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)),
-                pictureBoxTank.Width, pictureBoxTank.Height);
+               color, pictureBoxTank.Width, pictureBoxTank.Height);
 
             _Tank.SetPosition(rnd.Next(10, 50), rnd.Next(30, 70));
             Draw();
@@ -101,6 +121,12 @@ namespace Tank
                 comboBoxStrategy.Enabled = true;
                 _abstractStrategy = null;
             }
+        }
+
+        private void ButtonSelectTank_Click(object sender, EventArgs e)
+        {
+            SelectedTank = _Tank;
+            DialogResult = DialogResult.OK;
         }
     }
 }
