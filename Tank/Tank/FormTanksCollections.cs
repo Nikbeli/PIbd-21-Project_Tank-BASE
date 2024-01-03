@@ -77,7 +77,7 @@ namespace Tank
             }
         }
 
-        private void ButtonAddTank_Click(object sender, EventArgs e)
+        private void AddTank(DrawArmoVehicle tank)
         {
             if (CollectionListBox.SelectedIndex == -1)
             {
@@ -88,20 +88,34 @@ namespace Tank
             {
                 return;
             }
-            FormTank form = new();
-            if (form.ShowDialog() == DialogResult.OK)
+            if ((obj + tank) != false)
             {
-                if (obj + form.SelectedTank)
-                {
-                    MessageBox.Show("Объект добавлен");
-                    DrawTank.Image = obj.ShowTanks();
-                }
-                else
-                {
-                    MessageBox.Show("Не удалось добавить объект");
-                }
+                MessageBox.Show("Объект добавлен");
+                DrawTank.Image = obj.ShowTanks();
+            }
+            else
+            {
+                MessageBox.Show("Не удалось добавить объект");
             }
         }
+
+        private void ButtonAddTank_Click(object sender, EventArgs e)
+        {
+            // Проверка на вызов формочки
+            if (CollectionListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+            var obj = _storage[CollectionListBox.SelectedItem.ToString() ?? string.Empty];
+            if (obj == null)
+            {
+                return;
+            }
+            FormTankConfig form = new FormTankConfig();
+            form.Show();
+            form.AddEvent(AddTank);
+        }
+
         private void ButtonRemoveTank_Click(object sender, EventArgs e)
         {
             if (CollectionListBox.SelectedIndex == -1)

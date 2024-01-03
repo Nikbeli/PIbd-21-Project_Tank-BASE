@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.Pkcs;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using Tank.Entities;
 using Tank.MovementStrategy;
 
@@ -12,8 +13,8 @@ namespace Tank
     public class DrawArmoVehicle
     {
         public EntityArmoVehicle? Tank { get; protected set; }
-        protected int _pictureWidth;
-        protected int _pictureHeight;
+        public int _pictureWidth;
+        public int _pictureHeight;
         protected int _startPosX;
         protected int _startPosY;
         protected readonly int _Width = 160;
