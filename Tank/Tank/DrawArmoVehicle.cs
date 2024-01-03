@@ -55,7 +55,6 @@ namespace Tank
                 Direction.Right => _startPosX + _Width + Tank.Step < _pictureWidth,
                 Direction.Down => _startPosY + _Height + Tank.Step < _pictureHeight,
                 _ => false
-
             };
         }
 
