@@ -24,6 +24,8 @@ namespace Tank.Generics
         // Набор объектов
         private readonly SetGeneric<T> _collection;
 
+        public IEnumerable<T?> GetTanks => _collection.GetTanks();
+
         // Конструктор
         public TanksGenericCollection(int pictureWidth, int pictureHeight)
         {
