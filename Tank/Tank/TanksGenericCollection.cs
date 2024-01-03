@@ -99,6 +99,8 @@ namespace Tank.Generics
             {
                 if (tank != null)
                 {
+                    tank._pictureWidth = _pictureWidth;
+                    tank._pictureHeight = _pictureHeight;
                     tank.SetPosition((i % (_pictureWidth / _placeSizeWidth)) * _placeSizeWidth, (i / (_pictureWidth / _placeSizeWidth)) * _placeSizeHeight);
                     tank.DrawTransport(g);
                 }

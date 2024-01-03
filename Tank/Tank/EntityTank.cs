@@ -9,6 +9,7 @@ namespace Tank.Entities
     public class EntityTank : EntityArmoVehicle
     {
         public Color AdditionalColor { get; private set; }
+        public void setAdditionalColor(Color color) { AdditionalColor = color; }
         public bool BodyKit { get; private set; }
         public bool Caterpillar { get; private set; }
         public bool Tower { get; private set; }

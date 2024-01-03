@@ -38,7 +38,7 @@ namespace Tank.DrawningObjects
             if (ArmoVehicle.Caterpillar)
             {
                 // Гусеница. Отрисовка танковых катков
-                Brush BrushRandom = new SolidBrush(Tank?.BodyColor ?? Color.Black);
+                Brush BrushRandom = new SolidBrush(ArmoVehicle?.AdditionalColor ?? Color.Black);
                 g.FillRectangle(BrushRandom, 28 + _startPosX, 50 + _startPosY, 10, 3);
                 g.FillRectangle(BrushRandom, 53 + _startPosX, 50 + _startPosY, 10, 3);
                 g.FillRectangle(BrushRandom, 78 + _startPosX, 50 + _startPosY, 10, 3);
