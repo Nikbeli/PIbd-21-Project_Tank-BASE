@@ -63,9 +63,9 @@
             panel1.Controls.Add(InputNum);
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Right;
-            panel1.Location = new Point(694, 0);
+            panel1.Location = new Point(649, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(237, 479);
+            panel1.Size = new Size(237, 471);
             panel1.TabIndex = 0;
             // 
             // menuStrip1
@@ -208,7 +208,7 @@
             DrawTank.Dock = DockStyle.Fill;
             DrawTank.Location = new Point(0, 0);
             DrawTank.Name = "DrawTank";
-            DrawTank.Size = new Size(694, 479);
+            DrawTank.Size = new Size(649, 471);
             DrawTank.TabIndex = 1;
             DrawTank.TabStop = false;
             // 
@@ -220,7 +220,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(931, 479);
+            ClientSize = new Size(886, 471);
             Controls.Add(DrawTank);
             Controls.Add(panel1);
             Name = "FormTanksCollections";

@@ -1,3 +1,9 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Tank;
+
 namespace Tank
 {
     internal static class Program
@@ -8,10 +14,31 @@ namespace Tank
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new FormTanksCollections());
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            using (ServiceProvider serviceProvider = services.BuildServiceProvider())
+            {
+                Application.Run(serviceProvider.GetRequiredService<FormTanksCollections>());
+            }
+        }
+
+        private static void ConfigureServices(ServiceCollection services)
+        {
+            services.AddSingleton<FormTanksCollections>().AddLogging(option =>
+            {
+                string[] path = Directory.GetCurrentDirectory().Split('\\');
+                string pathNeed = "";
+                for (int i = 0; i < path.Length - 3; i++)
+                {
+                    pathNeed += path[i] + "\\";
+                }
+                var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(path: $"{pathNeed}appSetting.json", optional: false, reloadOnChange: true).Build();
+                var logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
+
+                option.SetMinimumLevel(LogLevel.Information);
+                option.AddSerilog(logger);
+            });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using Tank.Exceptions;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,10 +34,10 @@ namespace Tank
         public bool Insert(T tank, int position)
         {
             if (position < 0 || position >= _maxCount)
-                return false;
+                throw new TankNotFoundException(position);  // По позиции
 
             if (Count >= _maxCount)
-                return false;
+                throw new TankStorageOverflowException(_maxCount); // Макс количество в коллекции
             _places.Insert(0, tank);
             return true;
         }
@@ -44,10 +45,9 @@ namespace Tank
         // Удаление объекта из набора с конкретной позиции
         public bool Remove(int position)
         {
-            if (position < 0 || position > _maxCount)
-                return false;
-            if (position >= Count)
-                return false;
+            if (position < 0 || position > _maxCount || position >= Count)
+                throw new TankNotFoundException(position);
+
             _places.RemoveAt(position);
             return true;
         }
@@ -57,13 +57,13 @@ namespace Tank
         {
             get
             {
-                if (position < 0 || position > _maxCount)
+                if (position < 0 || position >= Count)
                     return null;
                 return _places[position];
             }
             set
             {
-                if (position < 0 || position > _maxCount)
+                if (position < 0 || position > _maxCount || Count == _maxCount)
                     return;
                 _places[position] = value;
             }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Tank.Generics;
 using Tank.DrawningObjects;
 using Tank.MovementStrategy;
+using Tank.Exceptions;
 
 namespace Tank
 {
@@ -56,7 +57,7 @@ namespace Tank
             }
         }
 
-        public bool SaveData(string filename)
+        public void SaveData(string filename)
         {
             if (File.Exists(filename))
             {
@@ -72,40 +73,44 @@ namespace Tank
                     records.Append($"{elem?.GetDataForSave(_separatorForObject)}{_separatorRecords}");
                 }
                 data.AppendLine($"{record.Key}{_separatorForKeyValue}{records}");
-            }
 
+            }
             if (data.Length == 0)
             {
-                return false;
+                throw new InvalidOperationException("File not found, невалиданя операция, нет данных для сохранения");
             }
             using (StreamWriter writer = new StreamWriter(filename))
             {
                 writer.WriteLine("TankStorage");
                 writer.Write(data.ToString());
-                return true;
             }
         }
 
-        public bool LoadData(string filename)
+        public void LoadData(string filename)
         {
             if (!File.Exists(filename))
             {
-                return false;
+                throw new FileNotFoundException("Файл не найден");
             }
+
             using (StreamReader reader = new StreamReader(filename))
             {
                 string checker = reader.ReadLine();
                 if (checker == null)
-                    return false;
+                    throw new NullReferenceException("Нет данных для загрузки");
                 if (!checker.StartsWith("TankStorage"))
-                    return false;
+                {
+                    //если нет такой записи, то это не те данные
+                    throw new FormatException("Неверный формат данных");
+                }
+
                 _tankStorages.Clear();
                 string strs;
                 bool firstinit = true;
                 while ((strs = reader.ReadLine()) != null)
                 {
                     if (strs == null && firstinit)
-                        return false;
+                        throw new NullReferenceException("Нет данных для загрузки");
                     if (strs == null)
                         break;
                     firstinit = false;
@@ -116,15 +121,22 @@ namespace Tank
                         DrawArmoVehicle? vehicle = data?.CreateDrawTank(_separatorForObject, _pictureWidth, _pictureHeight);
                         if (vehicle != null)
                         {
-                            if (!(collection + vehicle))
+                            try
                             {
-                                return false;
+                                _ = collection + vehicle;
+                            }
+                            catch (TankNotFoundException e)
+                            {
+                                throw e;
+                            }
+                            catch (TankStorageOverflowException e)
+                            {
+                                throw e;
                             }
                         }
                     }
                     _tankStorages.Add(name, collection);
                 }
-                return true;
             }
         }
     }

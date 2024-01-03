@@ -50,10 +50,7 @@ namespace Tank.Generics
         public static T? operator -(TanksGenericCollection<T, U> collect, int pos)
         {
             T? obj = collect._collection[pos];
-            if (obj != null)
-            {
-                collect._collection.Remove(pos);
-            }
+            collect._collection.Remove(pos);
             return obj;
         }
 
