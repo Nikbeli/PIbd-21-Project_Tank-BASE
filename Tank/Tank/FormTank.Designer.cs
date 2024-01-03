@@ -37,6 +37,7 @@
             buttonArmVechicle = new Button();
             buttonStep = new Button();
             comboBoxStrategy = new ComboBox();
+            ChooseCar = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBoxTank).BeginInit();
             SuspendLayout();
             // 
@@ -45,7 +46,7 @@
             pictureBoxTank.Location = new Point(1, 0);
             pictureBoxTank.Margin = new Padding(3, 4, 3, 4);
             pictureBoxTank.Name = "pictureBoxTank";
-            pictureBoxTank.Size = new Size(913, 599);
+            pictureBoxTank.Size = new Size(913, 571);
             pictureBoxTank.TabIndex = 0;
             pictureBoxTank.TabStop = false;
             // 
@@ -117,7 +118,7 @@
             buttonArmVechicle.Location = new Point(176, 501);
             buttonArmVechicle.Margin = new Padding(3, 4, 3, 4);
             buttonArmVechicle.Name = "buttonArmVechicle";
-            buttonArmVechicle.Size = new Size(145, 53);
+            buttonArmVechicle.Size = new Size(150, 53);
             buttonArmVechicle.TabIndex = 15;
             buttonArmVechicle.Text = "Создание бронеавтомобиля";
             buttonArmVechicle.UseVisualStyleBackColor = true;
@@ -143,12 +144,23 @@
             comboBoxStrategy.Size = new Size(151, 28);
             comboBoxStrategy.TabIndex = 19;
             // 
+            // ChooseCar
+            // 
+            ChooseCar.Location = new Point(807, 120);
+            ChooseCar.Name = "ChooseCar";
+            ChooseCar.Size = new Size(94, 52);
+            ChooseCar.TabIndex = 20;
+            ChooseCar.Text = "Выбрать технику";
+            ChooseCar.UseVisualStyleBackColor = true;
+            ChooseCar.Click += ButtonSelectTank_Click;
+            // 
             // FormTank
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(914, 568);
+            Controls.Add(ChooseCar);
             Controls.Add(comboBoxStrategy);
             Controls.Add(buttonStep);
             Controls.Add(buttonArmVechicle);
@@ -176,5 +188,6 @@
         private Button buttonArmVechicle;
         private Button buttonStep;
         private ComboBox comboBoxStrategy;
+        private Button ChooseCar;
     }
 }

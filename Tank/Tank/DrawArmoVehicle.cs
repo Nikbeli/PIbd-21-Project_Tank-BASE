@@ -5,6 +5,7 @@ using System.Security.Cryptography.Pkcs;
 using System.Text;
 using System.Threading.Tasks;
 using Tank.Entities;
+using Tank.MovementStrategy;
 
 namespace Tank
 {
@@ -124,5 +125,7 @@ namespace Tank
             g.FillEllipse(ColorBlack, 85 + _startPosX, 42 + _startPosY, 20, 20);
             g.FillEllipse(ColorBlack, 110 + _startPosX, 42 + _startPosY, 20, 20);
         }
+
+        public IMoveableObject GetMoveableObject => new DrawingObjectTank(this);
     }
 }

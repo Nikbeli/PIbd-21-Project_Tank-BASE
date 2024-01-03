@@ -49,7 +49,7 @@ namespace Tank.DrawningObjects
             {
                 // Орудие
                 Brush bodyBrush = new SolidBrush(ArmoVehicle.AdditionalColor);
-                g.FillRectangle(bodyBrush, _startPosX + 111, _startPosY + 17, 70, 5);
+                g.FillRectangle(bodyBrush, _startPosX + 111, _startPosY + 17, 60, 5);
 
                 // Зенитное орудие
                 Point[] pointgun = { new Point(_startPosX + 44, _startPosY + 13), new Point(_startPosX + 45, _startPosY + 12), new Point(_startPosX + 41, _startPosY + 8), new Point(_startPosX + 41, _startPosY + 7),
