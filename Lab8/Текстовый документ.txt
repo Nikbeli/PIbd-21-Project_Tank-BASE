@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Tank.DrawningObjects;
+using Tank.Entities;
+
+namespace Tank
+{
+    internal class TanksStorageCompare : IComparer<TanksGenericStorage?>
+    {
+        public int Compare(TanksGenericStorage? x, TanksGenericStorage? y)
+        {
+            if (x == null || x._pictureHeight == null)
+            {
+                throw new ArgumentNullException(nameof(x));
+            }
+            if (y == null || y.Keys == null)
+            {
+                throw new ArgumentNullException(nameof(y));
+            }
+            if (x.GetType().Name != y.GetType().Name)
+            {
+                if (x is DrawTank)
+                    return -1;
+            }
+
+            if (x.GetType().Name == y.GetType().Name && x is DrawTank)
+            {
+                EntityTank _TankX = (EntityTank)x.x._pictureHeight;
+                EntityTank _TankY = (EntityTank)x.y._pictureHeight;
+
+                if (_TankX.AdditionalColor.Name != _TankY.AdditionalColor.Name)
+                {
+                    return _TankX.AdditionalColor.Name.CompareTo(_TankY.AdditionalColor.Name);
+                }
+                var speedCompare = _TankX.Speed.CompareTo(_TankY.Speed);
+                if (speedCompare != 0)
+                {
+                    return speedCompare;
+                }
+                return _TankX.Weight.CompareTo(_TankY.Weight);
+            }
+        }
+    }
+}
